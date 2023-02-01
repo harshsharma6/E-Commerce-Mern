@@ -90,7 +90,7 @@ export function AdminPage() {
                                 <input type="text" name="name" className="form-control" onChange={handleFormData} placeholder="Enter Category Name"></input>
                             </div>
                             <div className="mb-3">
-                                <Link to="/product"><button className="btn bg-fur">Add Product</button></Link>
+                                <Link to="/product" className="btn bg-fur">Add Product</Link>
                             </div>
                             <div className="mb-3">
                                 <button className="btn bg-fur">Add Admin</button>

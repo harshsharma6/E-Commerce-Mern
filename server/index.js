@@ -32,7 +32,6 @@ app.get('/productpage', (req, res)=>{
   res.send(`Product Page`);
 });
 
-
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })

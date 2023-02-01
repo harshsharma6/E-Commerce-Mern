@@ -3,11 +3,20 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+//path required for giving path
+const path = require('path');
 
+// assign path with join function taking 3 parameters __dirname then relative path then flder name
+const productsFolder = path.join(__dirname, "..", "products");
+
+// require another library of express to upload file
+const upload = require('express-fileupload')
+router.use(upload());
 
 require('../db/conn');
 const Admin = require('../model/adminSchema');
 const Category = require('../model/categorySchema');
+const { Product } = require('../../client/src/Components/Product');
 
 router.get('/', (req, res) => {
     res.send(`Hello World From The Server Router js`);
@@ -85,6 +94,43 @@ router.post('/get_admin_data', async(req,res)=>{
 
 })
 
+router.post('/add_product', (req, res) => {
+
+    //checking files ???????
+    // to request files from body
+    if (req.files) {
+        console.log(req.files);
+    }
+
+    // in req file putting our coming (key - pic) from frontend
+    const { product_image } = req.files;
+
+    const { product_name , description, price, created_at, updated_at } = req.body;
+    if (!product_name || !description || !price || !product_image || !created_at || !updated_at) {
+        return res.status(422).json({ error: "Can not use empty field" });
+    } else {
+
+        console.log(productsFolder)
+        // Applying .mv to our pic key to move the file into our folder 
+        pic.mv(path.join(productsFolder, product_image.name))
+
+        // create document for product
+        const product = new Product({  product_name , description, price, created_at, updated_at, product_image: product_image.name });
+
+
+        Product.findOne({ product_name : product_name }).then((productExist) => {
+            // checking product exists of not in DB
+            if (productExist) {
+                return res.status(422).json({ error: "Product Name Already Exists" });
+            }
+
+            // save product in the collection
+            product.save().then(() => {
+                res.status(200).json({ message: "Product Saved" });
+            }).catch((err) => res.status(500).json({ error: "Failed to Save Product" }));
+        }).catch(err => { console.log(err) });
+    }
+});
 
 // //Using Async Await
 // const useAsync = async () => {

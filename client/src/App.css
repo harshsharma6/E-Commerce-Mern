@@ -75,6 +75,10 @@
   font-size: 50px;
 }
 
+.txt-20{
+  font-size: 20px;
+}
+
 .signupbox{
   display: flex;
   justify-content: center;
