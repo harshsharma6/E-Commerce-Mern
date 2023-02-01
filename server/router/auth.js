@@ -67,6 +67,24 @@ router.post('/add_product',(req,res)=>{
     }).catch((err)=>{console.log(err);});
 });
 
+router.post('/get_admin_data', async(req,res)=>{
+    try {
+        const { email } = req.body;
+        console.log(req.body);
+        const userLogin = await Admin.findOne({ email: email });
+
+        if (!userLogin) {
+            res.status(402).json({ error: "User Not Found" });
+        } else {
+            console.log("Working");
+            res.json(userLogin);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+
+})
+
 
 // //Using Async Await
 // const useAsync = async () => {

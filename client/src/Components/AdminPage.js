@@ -1,34 +1,62 @@
 import { useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
-export function AdminPage(){
+import { useState, useEffect } from "react";
+export function AdminPage() {
+    const [storeData, setStoreData] = useState("");
     function removeStorage() {
         localStorage.removeItem('email');
-        navigate('/signin');}
-        const navigate = useNavigate();
+        navigate('/signin');
+    }
+    const navigate = useNavigate();
 
-        
-        const [ user, setUser ] = useState({
-            name : ""
-        });
-    
-        let name, value;
-        const handleFormData = (e) => {
-            // console.log(e);
-            name = e.target.name;
-            value = e.target.value;
-    
-            setUser({...user, [name]:value });
+
+    const [user, setUser] = useState({
+        name: ""
+    });
+
+    let name, value;
+    const handleFormData = (e) => {
+        // console.log(e);
+        name = e.target.name;
+        value = e.target.value;
+
+        setUser({ ...user, [name]: value });
+    }
+
+    useEffect(() => {
+
+        const fetchInfo = async () => {
+
+            const user = localStorage.getItem('email');
+            const email = user;
+
+            const res = await fetch("/get_admin_data", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email
+                })
+            });
+
+            const data = await res.json();
+            setStoreData(data);
+            console.log(data);
         }
+        fetchInfo();
 
-        const postCategory = async () => {
-            const {name} = user;
+
+    }, [])
+
+    const postCategory = async () => {
+        const { name } = user;
         console.log(name);
-        const res =  await fetch("/add_category", {
+        const res = await fetch("/add_category", {
             method: "POST",
-            headers :{
-                "Content-Type":"application/json"
+            headers: {
+                "Content-Type": "application/json"
             },
-            body : JSON.stringify({
+            body: JSON.stringify({
                 name
             })
         });
@@ -42,23 +70,36 @@ export function AdminPage(){
             console.log("Added Category");
             // localStorage.setItem('email',email);
             // navigate('/adminpage');
-        }else{
+        } else {
             alert(data.error);
         }
-        }
+    }
 
-    return(
+    return (
         <>
-            <div className="text-small">Admin Page</div>
-            <button onClick={postCategory}>Add Category</button>
-            <input type="text" onChange={handleFormData} name="name"></input>
+            <section className="signup mb-3">
+                <div className="container">
+                    <div className="row">
+                        <div className="text-small col">
+                            Admin Page
 
-
-            <Link to="/product"><button>Add Product</button></Link>
-            
-            <button>Add Admin</button>
-
-            <a href="" className="ms-5" onClick={removeStorage}>Log Out</a>
+                        </div>
+                        <div className="col">
+                            <div className="input-group border-bottom mb-3">
+                                <button className="btn bg-fur" onClick={postCategory}>Add Category</button>
+                                <input type="text" name="name" className="form-control" onChange={handleFormData} placeholder="Enter Category Name"></input>
+                            </div>
+                            <div className="mb-3">
+                                <Link to="/product"><button className="btn bg-fur">Add Product</button></Link>
+                            </div>
+                            <div className="mb-3">
+                                <button className="btn bg-fur">Add Admin</button>
+                            </div>
+                        </div>
+                        <button className="btn bg-input" onClick={removeStorage}>Log Out</button>
+                    </div>
+                </div>
+            </section>
         </>
     )
 }
