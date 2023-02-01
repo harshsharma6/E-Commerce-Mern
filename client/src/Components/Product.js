@@ -7,9 +7,25 @@ export function Product(){
     return(
         
         <>
-            <div className="text-small">Add Product</div>
-            
-            <Link to="/adminpage"><a href="" className="ms-5" >Back</a></Link> 
+        <section className="admin mb-3">
+                <div className="container">
+                    <div className="row">
+                        <div className="col">
+                            Choose Category
+                            <select>
+                                <option value="Null">Null</option>
+                            </select>
+                        </div>
+                        <div className="col">
+                            <div className="input-group border-bottom mb-3">
+                                <button className="btn bg-fur">Add Product</button>
+                                <input type="text" name="name" className="form-control" placeholder="Enter Product Name"></input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <Link to="/adminpage"><button className="btn bg-fur">Back</button></Link> 
+            </section>
         </>
     )
 }

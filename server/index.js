@@ -25,6 +25,13 @@ app.get('/', middleware,(req, res) => {
 app.get('/signin', (req, res)=>{
   res.send(`Sign In page`);
 });
+app.get('/adminpage', (req, res)=>{
+  res.send(`Admin page`);
+});
+app.get('/productpage', (req, res)=>{
+  res.send(`Product Page`);
+});
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

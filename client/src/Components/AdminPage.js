@@ -77,11 +77,11 @@ export function AdminPage() {
 
     return (
         <>
-            <section className="signup mb-3">
+            <section className="admin mb-3">
                 <div className="container">
                     <div className="row">
-                        <div className="text-small col">
-                            Admin Page
+                        <div className=" welcome col">
+                            Welcome { storeData.userName}
 
                         </div>
                         <div className="col">
