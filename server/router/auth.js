@@ -16,7 +16,8 @@ router.use(upload());
 require('../db/conn');
 const Admin = require('../model/adminSchema');
 const Category = require('../model/categorySchema');
-const { Product } = require('../../client/src/Components/Product');
+const Product = require('../model/productSchema');
+
 
 router.get('/', (req, res) => {
     res.send(`Hello World From The Server Router js`);
@@ -67,14 +68,6 @@ router.post('/add_category',(req,res)=>{
     }).catch((err)=>{console.log(err);});
 });
 
-router.post('/add_product',(req,res)=>{
-    const {name} = req.body;
-    const category = new Category({ name });
-
-    category.save().then(() => {
-        res.status(200).json({ message: "Category Saved" });
-    }).catch((err)=>{console.log(err);});
-});
 
 router.post('/get_admin_data', async(req,res)=>{
     try {
@@ -98,15 +91,16 @@ router.post('/add_product', (req, res) => {
 
     //checking files ???????
     // to request files from body
-    if (req.files) {
-        console.log(req.files);
-    }
-
+    
+console.log(req.files)
     // in req file putting our coming (key - pic) from frontend
-    const { product_image } = req.files;
+    // const { product_image } = req.files;
 
-    const { product_name , description, price, created_at, updated_at } = req.body;
-    if (!product_name || !description || !price || !product_image || !created_at || !updated_at) {
+    // if (req.files) {
+    //     console.log(req.files);
+    // }
+    const { product_name , description, price, created_at } = req.body;
+    if (!product_name || !description || !price || !product_image || !created_at) {
         return res.status(422).json({ error: "Can not use empty field" });
     } else {
 
@@ -115,7 +109,7 @@ router.post('/add_product', (req, res) => {
         pic.mv(path.join(productsFolder, product_image.name))
 
         // create document for product
-        const product = new Product({  product_name , description, price, created_at, updated_at, product_image: product_image.name });
+        const product = new Product({  product_name , description, price, created_at, updated_at, product_image: pro_image.name });
 
 
         Product.findOne({ product_name : product_name }).then((productExist) => {

@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema({
         required:true
     },
     created_at:{
-        type: Date,
+        type: String,
         required: true
     },
     updated_at:{
