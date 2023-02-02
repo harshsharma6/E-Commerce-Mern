@@ -92,24 +92,24 @@ router.post('/add_product', (req, res) => {
     //checking files ???????
     // to request files from body
     
-console.log(req.files)
-    // in req file putting our coming (key - pic) from frontend
-    // const { product_image } = req.files;
 
-    // if (req.files) {
-    //     console.log(req.files);
-    // }
-    const { product_name , description, price, created_at } = req.body;
+    // in req file putting our coming (key - pic) from frontend
+    const { product_image } = req.files;
+
+    if (req.files) {
+        console.log(req.files);
+    }
+    const { product_name , description, price, created_at, updated_at } = req.body;
     if (!product_name || !description || !price || !product_image || !created_at) {
         return res.status(422).json({ error: "Can not use empty field" });
     } else {
 
         console.log(productsFolder)
         // Applying .mv to our pic key to move the file into our folder 
-        pic.mv(path.join(productsFolder, product_image.name))
+        product_image.mv(path.join(productsFolder, product_image.name))
 
         // create document for product
-        const product = new Product({  product_name , description, price, created_at, updated_at, product_image: pro_image.name });
+        const product = new Product({  product_name , description, price, created_at, updated_at, product_image: product_image.name });
 
 
         Product.findOne({ product_name : product_name }).then((productExist) => {

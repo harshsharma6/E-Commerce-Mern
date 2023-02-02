@@ -4,9 +4,10 @@ export function Product() {
     
     const navigate = useNavigate();
     const [pro_image,setProImage] = useState("");
+    // const [updated_at,setUpdated_at] = useState("");
 
     const [ productInfo, setProductInfo ] = useState({
-        product_name: "", description: "", price: "", product_image: "", created_at: "", updated_at: ""
+        product_name: "", description: "", price: "", created_at: "", updated_at: ""
     });
 
     let name, value;
@@ -30,15 +31,16 @@ export function Product() {
         const date = new Date();
         const d = date.toLocaleTimeString();
         console.log(d);
+    
         const {product_name, description, price, created_at, updated_at} = productInfo;
         
         const formData = new FormData();
         formData.append('product_image', pro_image);
-        formData.append('product_name',product_name)
-        formData.append('description',description)
-        formData.append('price',price)
+        formData.append('product_name',product_name);
+        formData.append('description',description);
+        formData.append('price',price);
         formData.append('created_at', d);
-        formData.append('updated_at',"")
+        formData.append('updated_at',d);
         console.log(formData);
         
         const res =  await fetch("/add_product", {
