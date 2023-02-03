@@ -3,6 +3,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const productSchema = new mongoose.Schema({
+    category:{
+        type: String,
+        required: true
+    },
     product_name : {
         type: String,
         required:true

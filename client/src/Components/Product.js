@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 export function Product() {
     
     const navigate = useNavigate();
     const [pro_image,setProImage] = useState("");
+    const [category,setCategory] = useState([]);
     // const [updated_at,setUpdated_at] = useState("");
 
     const [ productInfo, setProductInfo ] = useState({
-        product_name: "", description: "", price: "", created_at: "", updated_at: ""
+        // product_name: "", description: "", price: "", created_at: "", updated_at: ""
+        category:"", product_name: "", description: "", price: "", created_at: "", updated_at: ""
     });
 
     let name, value;
@@ -17,7 +19,7 @@ export function Product() {
         value = e.target.value;
 
         setProductInfo({...productInfo, [name]:value });
-        // console.log(productInfo)
+        console.log(productInfo)
     }
 
     const handleImageData = (e) =>{
@@ -26,16 +28,36 @@ export function Product() {
         console.log(e.target.files[0]);
     }
 
+    useEffect(() => {
+
+        const fetchInfo = async () => {
+
+
+            const res = await fetch("/get_category")
+
+            const data = await res.json();
+            console.log(data[1]);
+            const category_data = Object.values(data);
+            // console.log(Object.values(data.name));
+            console.log(category_data.name);
+            setCategory(data.name);
+            
+        }
+        fetchInfo();
+
+    }, [])
+
     const postProduct = async (e) => {
         e.preventDefault();
         const date = new Date();
         const d = date.toLocaleTimeString();
         console.log(d);
     
-        const {product_name, description, price, created_at, updated_at} = productInfo;
+        const {category, product_name, description, price, created_at, updated_at} = productInfo;
         
         const formData = new FormData();
         formData.append('product_image', pro_image);
+        formData.append('category',category);
         formData.append('product_name',product_name);
         formData.append('description',description);
         formData.append('price',price);
@@ -65,9 +87,13 @@ export function Product() {
                     <div className="row">
                         <div className="col">
                             <span className="input-group border-bottom mb-3 txt-20">Choose Category</span>
-                            <select className="form-control mb-3" >
+                            <select className="form-control mb-3" name="category" onChange={handleFormData}>
                                 <option value="">SELECT FROM HERE</option>
-                                <option value="123">123</option>
+                                {/* {
+                                    category.map((get_cat)=>{
+                                        <option value={get_cat}>{get_cat}</option>
+                                    })
+                                } */}
                             </select>
                         </div>
                         <div className="col">

@@ -99,8 +99,9 @@ router.post('/add_product', (req, res) => {
     if (req.files) {
         console.log(req.files);
     }
-    const { product_name , description, price, created_at, updated_at } = req.body;
-    if (!product_name || !description || !price || !product_image || !created_at) {
+    // const { product_name , description, price, created_at, updated_at } = req.body;
+    const {  category, product_name , description, price, created_at, updated_at } = req.body;
+    if (!category || !product_name || !description || !price || !product_image || !created_at) {
         return res.status(422).json({ error: "Can not use empty field" });
     } else {
 
@@ -109,7 +110,8 @@ router.post('/add_product', (req, res) => {
         product_image.mv(path.join(productsFolder, product_image.name))
 
         // create document for product
-        const product = new Product({  product_name , description, price, created_at, updated_at, product_image: product_image.name });
+        // const product = new Product({ product_name , description, price, created_at, updated_at, product_image: product_image.name });
+        const product = new Product({ category , product_name , description, price, created_at, updated_at, product_image: product_image.name });
 
 
         Product.findOne({ product_name : product_name }).then((productExist) => {
@@ -125,6 +127,11 @@ router.post('/add_product', (req, res) => {
         }).catch(err => { console.log(err) });
     }
 });
+
+
+router.get('/get_category',(req,res)=>{
+    Category.find({}).then((category_found)=>{res.json(category_found)})
+})
 
 // //Using Async Await
 // const useAsync = async () => {
