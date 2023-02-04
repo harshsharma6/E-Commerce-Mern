@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const categorySchema = new mongoose.Schema({
-    name : {
+    category_name : {
         type: String,
         required:true
     }

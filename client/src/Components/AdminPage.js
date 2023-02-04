@@ -10,7 +10,7 @@ export function AdminPage() {
 
 
     const [user, setUser] = useState({
-        name: ""
+        category_name: ""
     });
 
     let name, value;
@@ -49,15 +49,15 @@ export function AdminPage() {
     }, [])
 
     const postCategory = async () => {
-        const { name } = user;
-        console.log(name);
+        const { category_name } = user;
+        console.log(category_name);
         const res = await fetch("/add_category", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                name
+                category_name
             })
         });
 
@@ -87,7 +87,7 @@ export function AdminPage() {
                         <div className="col">
                             <div className="input-group border-bottom mb-3">
                                 <button className="btn bg-fur" onClick={postCategory}>Add Category</button>
-                                <input type="text" name="name" className="form-control" onChange={handleFormData} placeholder="Enter Category Name"></input>
+                                <input type="text" name="category_name" className="form-control" onChange={handleFormData} placeholder="Enter Category Name"></input>
                             </div>
                             <div className="mb-3">
                                 <Link to="/product" className="btn bg-fur">Add Product</Link>

@@ -59,17 +59,17 @@ router.post('/signin', async (req, res) => {
     }
 });
 
-router.post('/add_category',(req,res)=>{
-    const {name} = req.body;
-    const category = new Category({ name });
+router.post('/add_category', (req, res) => {
+    const { category_name } = req.body;
+    const category = new Category({ category_name: category_name });
 
     category.save().then(() => {
         res.status(200).json({ message: "Category Saved" });
-    }).catch((err)=>{console.log(err);});
+    }).catch((err) => { console.log(err); });
 });
 
 
-router.post('/get_admin_data', async(req,res)=>{
+router.post('/get_admin_data', async (req, res) => {
     try {
         const { email } = req.body;
         console.log(req.body);
@@ -91,7 +91,7 @@ router.post('/add_product', (req, res) => {
 
     //checking files ???????
     // to request files from body
-    
+
 
     // in req file putting our coming (key - pic) from frontend
     const { product_image } = req.files;
@@ -100,7 +100,7 @@ router.post('/add_product', (req, res) => {
         console.log(req.files);
     }
     // const { product_name , description, price, created_at, updated_at } = req.body;
-    const {  category, product_name , description, price, created_at, updated_at } = req.body;
+    const { category, product_name, description, price, created_at, updated_at } = req.body;
     if (!category || !product_name || !description || !price || !product_image || !created_at) {
         return res.status(422).json({ error: "Can not use empty field" });
     } else {
@@ -111,10 +111,10 @@ router.post('/add_product', (req, res) => {
 
         // create document for product
         // const product = new Product({ product_name , description, price, created_at, updated_at, product_image: product_image.name });
-        const product = new Product({ category , product_name , description, price, created_at, updated_at, product_image: product_image.name });
+        const product = new Product({ category, product_name, description, price, created_at, updated_at, product_image: product_image.name });
 
 
-        Product.findOne({ product_name : product_name }).then((productExist) => {
+        Product.findOne({ product_name: product_name }).then((productExist) => {
             // checking product exists of not in DB
             if (productExist) {
                 return res.status(422).json({ error: "Product Name Already Exists" });
@@ -129,10 +129,23 @@ router.post('/add_product', (req, res) => {
 });
 
 
-router.get('/get_category',(req,res)=>{
-    Category.find({}).then((category_found)=>{res.json(category_found)})
+router.get('/get_category', async (req, res) => {
+    // const {category_name} = req.body;
+    // const category = Category({ category_name });
+    //Slightly working below ones
+    // Category.find({}).then((category_found)=>{res.json(category_found)})
+    await Category.find({}).then((cat) => {
+        res.json(cat);
+        // cat.map((category_found)=>{res.json(category_found.category_name)})
+    })
 })
 
+router.get('/get_product', async (req, res) => {
+    await Product.find({}).then((pro) => {
+        res.json(pro);
+        // cat.map((category_found)=>{res.json(category_found.category_name)})
+    })
+})
 // //Using Async Await
 // const useAsync = async () => {
 //     try {

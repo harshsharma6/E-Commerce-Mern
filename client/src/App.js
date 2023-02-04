@@ -11,7 +11,7 @@ import  SignIn  from './Components/SingIn';
 import { About } from './Components/About';
 import { AdminPage } from './Components/AdminPage';
 import { Product } from './Components/Product';
-
+import 'bootstrap/dist/css/bootstrap.css';
 function App() {
   return (
     <div>
