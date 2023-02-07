@@ -12,6 +12,7 @@ import { About } from './Components/About';
 import { AdminPage } from './Components/AdminPage';
 import { Product } from './Components/Product';
 import 'bootstrap/dist/css/bootstrap.css';
+import { UpdateProduct } from './Components/UpdateProduct';
 function App() {
   return (
     <div>
@@ -29,6 +30,7 @@ function App() {
   <Route path="/signin" element={ <SignIn /> }></Route>
   <Route path="/adminpage" element={ <AdminPage /> }></Route>
   <Route path="/product" element={ <Product /> }></Route>
+  <Route path="/updateproduct" element={ <UpdateProduct /> }></Route>
 
   {/* <Route path="/register" element={ <Registration /> }></Route> */}
 

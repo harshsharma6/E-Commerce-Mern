@@ -143,8 +143,22 @@ router.get('/get_category', async (req, res) => {
 router.get('/get_product', async (req, res) => {
     await Product.find({}).then((pro) => {
         res.json(pro);
-        // cat.map((category_found)=>{res.json(category_found.category_name)})
     })
+})
+router.get('/get_pro_id/:id', async (req, res) => {
+    console.log(req.params.id);
+    await Product.find({_id: req.params.id}).then((pro_id) => {
+        res.json(pro_id);
+    })
+})
+
+router.post('/update_product', async (req, res) => {
+    // storing info from db in variables
+    const { category, product_name, description, price, updated_at } = req.body;
+    console.log(req.body);
+    const get_pro_name = Product.updateOne({ product_name: product_name }, { $set: { category, product_name, description, price, updated_at } }).then((get_info) => { res.json({ message: "Updated User Info" }) }).catch((error) => { res.status(402).json({ error: "Invalid Info" }); })
+    // console.log(get_information)
+    
 })
 // //Using Async Await
 // const useAsync = async () => {

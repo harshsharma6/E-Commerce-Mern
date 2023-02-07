@@ -10,6 +10,12 @@ app.use(express.json());
 // link the router file to make router
 app.use(require('./router/auth'));
 
+// Enable folder to serve files from server
+app.use(express.static('products'))
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({limit: "100mb", extended: true}))
+
 const port = process.env.PORT;
 
 // middleware

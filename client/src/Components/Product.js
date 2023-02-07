@@ -3,10 +3,12 @@ import { useNavigate, Link } from "react-router-dom";
 export function Product() {
 
     const navigate = useNavigate();
+    const [edit, setEdit] = useState(false);
     const [pro_image, setProImage] = useState("");
     const [category, setCategory] = useState([]);
     const [product, setProduct] = useState([]);
     const [pro_cat, setPro_cat] = useState("");
+    const [edit_data, setEdit_data] = useState([]);
     // console.log(category);
     // const [updated_at,setUpdated_at] = useState("");
 
@@ -33,6 +35,7 @@ export function Product() {
         console.log(e.target.files[0]);
     }
 
+
     useEffect(() => {
 
         const fetchInfo = async () => {
@@ -41,7 +44,6 @@ export function Product() {
             const data = await res.json();
 
             console.log(data);
-            // console.log(typeof(data));
             // const category_data = Object.values(data);
             // console.log(Object.values(data.category_name));
             // console.log(category_data[0].category_name);
@@ -65,6 +67,24 @@ export function Product() {
         }
         fetchProduct();
     }, [])
+
+        const editClick = async (e) => {
+            const eVar = e;
+            console.log(e);
+            const res = await fetch("/get_pro_id/"+ eVar)
+            const data = await res.json();
+            if (res.ok){
+                console.log("Edit Working");
+                console.log(data)
+                setEdit_data(data)
+                setEdit(true)
+                localStorage.setItem("productId",eVar)
+                navigate("/updateproduct")
+            }else{
+                console.log("Not Working");
+            }
+        }
+        
 
     const postProduct = async (e) => {
         e.preventDefault();
@@ -98,37 +118,69 @@ export function Product() {
         }
     }
 
+    // const updateProduct = async (e) => {
+    //     e.preventDefault();
+    //     const date = new Date();
+    //     const d = date.toLocaleTimeString();
+
+    //     const { category, product_name, description, price, updated_at } = productInfo;
+    //     console.log(productInfo);
+    //     const res = await fetch("/update_product", {
+    //         method: "POST",
+    //         headers: {
+    //             "Accept": "application/json",
+    //             "Content-Type": "application/json"
+    //         },
+    //         body: JSON.stringify({
+    //             category, product_name, description, price, updated_at: d
+    //         })
+    //     });
+    //     const data = await res.json();
+
+    //     if (res.ok) {
+    //         setEdit(false);
+    //         navigate("/product");
+    //     } else {
+    //         console.log(data.error);
+    //     }
+
+    // }
     return (
 
         <>
             <section className="admin mb-3">
                 <div className="container">
                     <div className="row">
-                        <div className="col">
-                            <table className="table table-bordered">
-                                <thead></thead>
-                                <tr>
-                                    <td>Category</td>
-                                    <td>Product Name</td>
-                                    <td>Product Description</td>
-                                    <td>Product Price</td>
-                                    <td>Product Image</td>
-                                    <td>Action</td>
-                                </tr>
-                                {product.map(get_pro => {
-                                    return <tr>
-                                        <td>{get_pro.category}</td>
-                                        <td>{get_pro.product_name}</td>
-                                        <td>{get_pro.description}</td>
-                                        <td>{get_pro.price}</td>
-                                        <td>{get_pro.product_image}</td>
-                                        <td><button className="btn bg-fur">Edit</button> &nbsp; <button className="btn btn-danger">Delete</button> </td>
+                        <div className="col-8">
+                            <table className="table table-bordered bg-input">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Product Name</th>
+                                        <th>Product Description</th>
+                                        <th>Product Price</th>
+                                        <th>Product Image</th>
+                                        <th>Action</th>
                                     </tr>
-                                })}
+                                </thead>
+                                <tbody>
+                                    {
+                                        product.map(get_pro => {
+                                            return <tr>
+                                                <td>{get_pro.category}</td>
+                                                <td>{get_pro.product_name}</td>
+                                                <td>{get_pro.description}</td>
+                                                <td>{get_pro.price}</td>
+                                                <td><img src={get_pro.product_image} className="img-fluid" height="70px" width="70px" ></img></td>
+                                                <td><button className="btn btn-dark bg-fur" onClick={()=>editClick(get_pro._id)}>Edit</button></td>
+                                                {/* <td><Link to="/updateproduct" className="btn btn-dark bg-fur">Edit/Update</Link> &nbsp; <button className="btn btn-danger">Delete</button> </td> */}
+                                            </tr>
+                                        })
+                                    }
+                                </tbody>
                             </table>
                         </div>
                         <div className="col">
-                            <span className="input-group border-bottom mb-3 txt-20">Add Product in {pro_cat}</span>
                             <span className="input-group border-bottom mb-3 txt-20">Choose Category</span>
                             <select className="form-control mb-3" name="category" onChange={handleFormData}>
                                 <option value="">SELECT FROM HERE</option>
@@ -138,6 +190,7 @@ export function Product() {
                                     )
                                 }
                             </select>
+                            <span className="input-group border-bottom mb-3 txt-20">Add Product in {pro_cat}</span>
                             <form method="POST" encType="multipart/form-data">
                                 <div>
                                     <input type="text" name="product_name" value={productInfo.product_name} onChange={handleFormData} className="form-control" placeholder="Enter Product Name"></input>
