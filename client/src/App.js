@@ -13,6 +13,11 @@ import { AdminPage } from './Components/AdminPage';
 import { Product } from './Components/Product';
 import 'bootstrap/dist/css/bootstrap.css';
 import { UpdateProduct } from './Components/UpdateProduct';
+import { AddToCart } from './Components/AddToCart';
+import UserSignIn from './Components/UserSignin';
+import UserRegistration from './Components/UserRegistration';
+import { Profile } from './Components/Profile';
+import { Test } from './Components/test';
 function App() {
   return (
     <div>
@@ -27,10 +32,16 @@ function App() {
 
   <Route path="/contact" element={ <Contact /> }></Route>
 
+  <Route path="/userregistration" element={ <UserRegistration /> }></Route>
+  <Route path="/usersignin" element={ <UserSignIn /> }></Route>
+  <Route path="/profile" element={ <Profile /> }></Route>
+  <Route path="/test" element={ <Test /> }></Route>
+
   <Route path="/signin" element={ <SignIn /> }></Route>
   <Route path="/adminpage" element={ <AdminPage /> }></Route>
   <Route path="/product" element={ <Product /> }></Route>
   <Route path="/updateproduct" element={ <UpdateProduct /> }></Route>
+  <Route path="/cart" element={ <AddToCart /> }></Route>
 
   {/* <Route path="/register" element={ <Registration /> }></Route> */}
 

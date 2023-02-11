@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 export function UpdateProduct() {
     const navigate = useNavigate();
+    if (!localStorage.getItem('email')) {
+        navigate("/signin")
+    }
     const [product_name, setProduct_name] = useState("");
     const [edit, setEdit] = useState(false);
     const [pro_image, setProImage] = useState("");
@@ -11,7 +14,7 @@ export function UpdateProduct() {
     const [edit_data, setEdit_data] = useState([]);
     const [productInfo, setProductInfo] = useState({
         // product_name: "", description: "", price: "", created_at: "", updated_at: ""
-        category: "", product_name: "", description: "", price: "", created_at: "", updated_at: ""
+        category: "", product_name: "", description: "", price: "", updated_at: ""
     });
 
     let name, value;
@@ -75,7 +78,7 @@ export function UpdateProduct() {
             if (res.ok) {
                 // console.log("Edit Working");
                 // console.log(data)
-                
+
                 setEdit_data(data)
                 setEdit(true)
             } else {
@@ -92,21 +95,81 @@ export function UpdateProduct() {
 
         const { category, product_name, description, price, updated_at } = productInfo;
         console.log(productInfo);
+
+
+       const formData = new FormData();
+        formData.append('product_image', pro_image);
+        formData.append('category', category);
+        formData.append('description', description);
+        formData.append('price', price);
+        formData.append('updated_at', d);
+        formData.append('product_name', product_name);
+
         const res = await fetch("/update_product", {
             method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                category, product_name, description, price, updated_at: d
-            })
+            body: formData
         });
+
         const data = await res.json();
 
         if (res.ok) {
-            setEdit(false);
-            navigate("/product");
+            console.log("Photo Saved Successfully");
+            // setEdit(false);
+            // navigate("/about");
+        } else {
+            console.log(data.error);
+        }
+
+
+    }
+
+    // const updateProduct = async (e) => {
+    //     e.preventDefault();
+    //     const date = new Date();
+    //     const d = date.toLocaleTimeString();
+
+    //     const { category, product_name, description, price, updated_at } = productInfo;
+    //     console.log(productInfo);
+    //     const res = await fetch("/update_product", {
+    //         method: "POST",
+    //         headers: {
+    //             "Accept": "application/json",
+    //             "Content-Type": "application/json"
+    //         },
+    //         body: JSON.stringify({
+    //             category, product_name, description, price, updated_at: d
+    //         })
+    //     });
+    //     const data = await res.json();
+
+    //     if (res.ok) {
+    //         setEdit(false);
+    //         navigate("/product");
+    //     } else {
+    //         console.log(data.error);
+    //     }
+
+    // }
+    // Update Pic from Here
+    const updatePic = async (e) => {
+        e.preventDefault();
+        const eVar = localStorage.getItem("productId");
+        // console.log(productId.product_name); 
+        const formData = new FormData();
+        formData.append('product_image', pro_image);
+        formData.append('product_name', product_name);
+
+        const res = await fetch("/change_pro_img", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            console.log("Photo Saved Successfully");
+            // setEdit(false);
+            // navigate("/about");
         } else {
             console.log(data.error);
         }
@@ -134,7 +197,7 @@ export function UpdateProduct() {
                                     {
                                         edit_data.map(update_pro => {
                                             return <tr>
-                                                <td>{update_pro.category}<select className="form-control mb-3" name="category"  onChange={handleFormData}>
+                                                <td>{update_pro.category}<select className="form-control mb-3" name="category" onChange={handleFormData}>
                                                     <option value="">Select Category</option>
                                                     {
                                                         category.map(get_cat =>
@@ -142,10 +205,20 @@ export function UpdateProduct() {
                                                         )
                                                     }
                                                 </select></td>
-                                                <td>{update_pro.product_name}<input type="text" name="product_name" value={()=>setProduct_name(update_pro.product_name)} className="form-control" placeholder={update_pro.product_name} readOnly></input></td>
+                                                <td>
+                                                {update_pro.product_name}
+                                                <input type="text" name="product_name" value={productInfo.product_name = update_pro.product_name} className="form-control" placeholder={update_pro.product_name} onInput={handleFormData} readOnly></input>
+                                                </td>
                                                 <td>{update_pro.description} <textarea name="description" value={productInfo.description} onChange={handleFormData} className="form-control" placeholder="Enter Product Description" /></td>
                                                 <td>{update_pro.price}<input type="number" name="price" value={productInfo.price} onChange={handleFormData} className="form-control" placeholder="Enter Product Price"></input></td>
-                                                <td><img src={update_pro.product_image} className="img-fluid" height="70px" width="70px" ></img></td>
+                                                <td>
+                                                <img src={update_pro.product_image} className="img-fluid" height="70px" width="70px" ></img>
+                                                {/* Image Updated */}
+                                                    <form method='POST' encType='multipart/form-data'>
+                                                        <input type="file" name="pro_image" onChange={handleImageData} />
+                                                        {/* <button onClick={updatePic}>Save Image</button> */}
+                                                    </form>                                        
+                                                </td>
                                                 <td><button className="btn btn-dark bg-fur" onClick={updateProduct}>Update</button> &nbsp; <button className="btn btn-danger">Delete</button> </td>
                                             </tr>
                                         })
@@ -156,7 +229,7 @@ export function UpdateProduct() {
                     </div>
                 </div>
 
-                <Link to="/product" className="btn bg-input input-group mb-3" onClick={()=>localStorage.removeItem("productId")}>Back</Link>
+                <Link to="/product" className="btn bg-input input-group mb-3" onClick={() => localStorage.removeItem("productId")}>Back</Link>
             </section>
         </>
     )

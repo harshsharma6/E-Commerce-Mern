@@ -8,6 +8,7 @@ const path = require('path');
 
 // assign path with join function taking 3 parameters __dirname then relative path then flder name
 const productsFolder = path.join(__dirname, "..", "products");
+const userFolder = path.join(__dirname, "..", "user_img");
 
 // require another library of express to upload file
 const upload = require('express-fileupload')
@@ -17,13 +18,61 @@ require('../db/conn');
 const Admin = require('../model/adminSchema');
 const Category = require('../model/categorySchema');
 const Product = require('../model/productSchema');
+const Customer = require('../model/customerSchema');
 
 
 router.get('/', (req, res) => {
     res.send(`Hello World From The Server Router js`);
 });
 
-// login route
+
+router.post('/register', (req, res) => {
+
+    //checking files ???????
+    // to request files from body
+    if (req.files) {
+        console.log(req.files);
+    }
+
+    // in req file putting our coming (key - pic) from frontend
+    const { pic } = req.files;
+
+    const { name: userName, email, phone,  password, cpassword } = req.body;
+    if (!pic || !userName || !email || !phone || !password || !cpassword) {
+        return res.status(422).json({ error: "Can not use empty field" });
+    } else if (password != cpassword) {
+        return res.status(400).json({ error: "Password & Confirm Password Not Matched" });
+    } else {
+
+        console.log(userFolder)
+        // Applying .mv to our pic key to move the file into our folder 
+        pic.mv(path.join(userFolder, pic.name))
+
+        // create document for user
+        const user = new Customer({ userName, email, phone, password, cpassword, pic: pic.name });
+
+
+        Customer.findOne({ email: email }).then((userExist) => {
+            // checking user exists of not in DB
+            if (userExist) {
+                return res.status(422).json({ error: "Email Already Exists" });
+            }
+
+            // save user in the collection
+            user.save().then(() => {
+                res.status(200).json({ message: "User Saved" });
+            }).catch((err) => res.status(500).json({ error: "Failed to Register" }));
+        }).catch(err => { console.log(err) });
+
+        // console.log(name);
+        // console.log(email);
+        // console.log(password);
+        // res.json( {message : req.body});
+        // res.send("registration page");
+    }
+});
+
+// login route for Admin
 router.post('/signin', async (req, res) => {
     // console.log(req.body);
     // res.json({message : "signin"});
@@ -35,6 +84,42 @@ router.post('/signin', async (req, res) => {
         }
 
         const userLogin = await Admin.findOne({ email: email });
+        // console.log(userLogin);
+
+        if (!userLogin) {
+            res.status(402).json({ error: "User Not Found" });
+        } else {
+            const passwordCheck = await bcrypt.compare(password, userLogin.password);
+            if (!passwordCheck) {
+                res.status(402).json({ error: "Incorrect Credentials" });
+            } else {
+                // token = await userLogin.generateAuthToken();
+
+                // res.cookie("jwtoken", token, {
+                //     expires:  new Date(Date.now()+25892000000),
+                //     httpOnly :true
+                // });
+                res.json({ message: "User Login Successfull" });
+            }
+        }
+
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+// login route for User
+router.post('/usersignin', async (req, res) => {
+    // console.log(req.body);
+    // res.json({message : "signin"});
+    try {
+        // let token;
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({ error: "Plz Fill Both Fields" });
+        }
+
+        const userLogin = await Customer.findOne({ email: email });
         // console.log(userLogin);
 
         if (!userLogin) {
@@ -91,7 +176,6 @@ router.post('/add_product', (req, res) => {
 
     //checking files ???????
     // to request files from body
-
 
     // in req file putting our coming (key - pic) from frontend
     const { product_image } = req.files;
@@ -154,11 +238,36 @@ router.get('/get_pro_id/:id', async (req, res) => {
 
 router.post('/update_product', async (req, res) => {
     // storing info from db in variables
+    const {product_image} = req.files;
     const { category, product_name, description, price, updated_at } = req.body;
+    product_image.mv(path.join(productsFolder, product_image.name))
     console.log(req.body);
-    const get_pro_name = Product.updateOne({ product_name: product_name }, { $set: { category, product_name, description, price, updated_at } }).then((get_info) => { res.json({ message: "Updated User Info" }) }).catch((error) => { res.status(402).json({ error: "Invalid Info" }); })
-    // console.log(get_information)
+    const get_pro_name = Product.updateOne({ product_name: product_name }, { $set: { category, product_name, description, price, updated_at, product_image:product_image.name } }).then((get_info) => { res.json({ message: "Updated User Info" }) }).catch((error) => { res.status(402).json({ error: "Invalid Info" }); })
     
+})
+
+router.post('/change_pro_img', (req, res) => {
+    // storing info from db in variables
+    if (req.files) {
+        console.log(req.files);
+    }
+    const {product_name} = req.body;
+    const {product_image} = req.files;
+    console.log(productsFolder);
+    console.log(product_name);
+    product_image.mv(path.join(productsFolder, product_image.name))
+    Product.updateOne({product_name: product_name}, {$set :{product_name:product_image.name}}).then(()=>{res.json({message:"Image Updated"})})
+})
+
+router.get('/get/:_id',(req,res)=>{
+    const id = req.params._id
+    Product.find({_id:id}).then((sendId)=>{res.json(sendId)})
+})
+
+router.post('/update/:_id',(req,res)=>{
+    const id = req.params._id;
+    const {price ,description} = req.body;
+    Product.updateOne({_id:id},{$set: {price, description}}).then(()=>{res.json({message:"Product Updated"})})
 })
 // //Using Async Await
 // const useAsync = async () => {

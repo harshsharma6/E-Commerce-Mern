@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 export function Product() {
-
+ 
     const navigate = useNavigate();
+    if (!localStorage.getItem('email')) {
+        navigate("/signin")
+    }
     const [edit, setEdit] = useState(false);
     const [pro_image, setProImage] = useState("");
     const [category, setCategory] = useState([]);

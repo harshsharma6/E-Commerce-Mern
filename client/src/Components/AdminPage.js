@@ -1,14 +1,17 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 export function AdminPage() {
+    const navigate = useNavigate();
     const [storeData, setStoreData] = useState("");
     function removeStorage() {
         localStorage.removeItem('email');
         navigate('/signin');
     }
-    const navigate = useNavigate();
+    
 
-
+    if (!localStorage.getItem('email')) {
+        navigate("/signin")
+    }
     const [user, setUser] = useState({
         category_name: ""
     });
