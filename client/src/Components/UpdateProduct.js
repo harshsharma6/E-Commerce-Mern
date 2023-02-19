@@ -150,31 +150,6 @@ export function UpdateProduct() {
     //     }
 
     // }
-    // Update Pic from Here
-    const updatePic = async (e) => {
-        e.preventDefault();
-        const eVar = localStorage.getItem("productId");
-        // console.log(productId.product_name); 
-        const formData = new FormData();
-        formData.append('product_image', pro_image);
-        formData.append('product_name', product_name);
-
-        const res = await fetch("/change_pro_img", {
-            method: "POST",
-            body: formData
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-            console.log("Photo Saved Successfully");
-            // setEdit(false);
-            // navigate("/about");
-        } else {
-            console.log(data.error);
-        }
-
-    }
     return (
 
         <>
