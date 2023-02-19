@@ -113,7 +113,7 @@ export function UpdateProduct() {
         const data = await res.json();
 
         if (res.ok) {
-            console.log("Photo Saved Successfully");
+            console.log("Updated Successfully");
             // setEdit(false);
             // navigate("/about");
         } else {
