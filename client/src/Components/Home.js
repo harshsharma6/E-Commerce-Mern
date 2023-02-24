@@ -56,23 +56,23 @@ const Home = () => {
     return (
         <>
             <div className='home'>
-                <div className='flt-r'>
+                {/* <div className='flt-r'>
                     <button className='btn btn-dark bg-fur' onClick={toProfile}>Profile</button>
-                </div>
+                </div> */}
                 <div className='home-flex'>
                     <div className='row'>
                         {
                             product.map(get_pro => {
-                                return <div className='wrapper bg-fur'>
-                                    <div className='proimg'>
+                                return <div className='wrapper wrapper-s bg-fur bg'>
+                                    <div className='proimg proimg-s'>
                                         <img src={get_pro.product_image} height="200px" width="200px" ></img>
                                     </div>
-                                    <div className='prodetails'>
-                                        <div className='protxt'>
+                                    <div className='prodetails prodetails-s'>
+                                        <div className='protxt protxt-s'>
                                             <h1>{get_pro.product_name}</h1>
                                             <p>{get_pro.description}</p>
                                         </div>
-                                        <div className='pro-price'>
+                                        <div className='pro-price pro-price-s'>
                                             <p>₹ <span>{get_pro.price}</span></p>
                                             <button className='btn btn-dark bg-input' onClick={() => editClick(get_pro._id)}>Add To Cart</button>
                                             {/* <button className="btn btn-dark bg-fur" onClick={() => editClick(get_pro._id)}>Edit</button> */}

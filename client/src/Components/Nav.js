@@ -1,8 +1,17 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Nav = () => {
+    const navigate = useNavigate();
+    function toProfile(){
+        if(localStorage.getItem("useremail")){
+            navigate("/profile");
+        }else{
+            window.alert("Please Signin To Visit Your Profile")
+            navigate("/usersignin");
+        }
+    }
     return (
         <>
             <nav class="navbar navbar-expand-sm navbar-dark bg-fur bg-gradient p-4">
@@ -16,9 +25,9 @@ const Nav = () => {
                             <li class="nav-item">
                                 <Link to="/" class="nav-link me-4">Home</Link>
                             </li>
-                            <li class="nav-item">
+                            {/* <li class="nav-item">
                                 <Link to="/about" class="nav-link me-4">About</Link>
-                            </li>
+                            </li> */}
                             <li class="nav-item">
                                 <Link to="/contact" class="nav-link me-4">Contact</Link>
                             </li>
@@ -27,6 +36,9 @@ const Nav = () => {
                             </li>
                             <li class="nav-item">
                                 <Link to="/userregistration" class="nav-link me-4">Register</Link>
+                            </li>
+                            <li class="nav-item">
+                                <button className='btn btn-dark bg-fur' onClick={toProfile}>Profile</button>
                             </li>
                         </ul>
                     </div>
