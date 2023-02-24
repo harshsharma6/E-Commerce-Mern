@@ -44,9 +44,7 @@ router.post('/register', (req, res) => {
         return res.status(400).json({ error: "Password & Confirm Password Not Matched" });
     } else {
 
-        console.log(userFolder)
-        // Applying .mv to our pic key to move the file into our folder 
-        pic.mv(path.join(userFolder, pic.name))
+        
 
         // create document for user
         const user = new Customer({ userName, email, phone, password, cpassword, pic: pic.name });
@@ -55,9 +53,13 @@ router.post('/register', (req, res) => {
         Customer.findOne({ email: email }).then((userExist) => {
             // checking user exists of not in DB
             if (userExist) {
-                return res.status(422).json({ error: "Email Already Exists" });
+                return res.status(422).json({ error: "Email Already Exists" ,status: 422});
             }
 
+            console.log(userFolder)
+            // Applying .mv to our pic key to move the file into our folder 
+            pic.mv(path.join(userFolder, pic.name))
+            
             // save user in the collection
             user.save().then(() => {
                 res.status(200).json({ message: "User Saved" });
