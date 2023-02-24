@@ -154,7 +154,7 @@ export function UpdateProduct() {
 
         <>
             <section className="admin mb-3">
-                <div className="container">
+                <div className="container-fluid">
                     <div className="row">
                         <div className="col">
                             <table className="table table-bordered bg-input">

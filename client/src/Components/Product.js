@@ -154,7 +154,7 @@ export function Product() {
             <section className="admin mb-3">
                 <div className="container-fluid">
                     <div className="row">
-                        <div className="col-8 col-s-6">
+                        <div className="col-md-8">
                             <table className="table table-bordered bg-input">
                                 <thead>
                                     <tr>
@@ -183,7 +183,7 @@ export function Product() {
                                 </tbody>
                             </table>
                         </div>
-                        <div className="col col-s-6">
+                        <div className="col-md-4">
                             <span className="input-group border-bottom mb-3 txt-20">Choose Category</span>
                             <select className="form-control mb-3" name="category" onChange={handleFormData}>
                                 <option value="">SELECT FROM HERE</option>
